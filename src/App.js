@@ -1,6 +1,6 @@
 import './App.css'
 import React from "react"
-import HelloCom from './Hello'
+import HelloFacade from './Hello'
 
 const mockHello = (() => ({
   avatar: {
@@ -16,7 +16,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <HelloCom {...mockHello}/>
+        <HelloFacade {...mockHello}/>
       </header>
     </div>
   )

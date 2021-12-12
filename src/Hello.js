@@ -1,45 +1,63 @@
-import React from "react"
+import React, {useMemo} from "react"
 import {useNavigate} from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux'
 import { addEvent } from './features/tracker/trackerSlice'
 
 const Avatar = ({avatar}) => <img style={{width: "50px", height: "50px"}} alt={avatar.alt} src={avatar.src}/>
 
-const HelloCom = ({user, isAuth, avatar}) => {
-  const navigate = useNavigate()
+
+const HelloFacade = ({user, isAuth, avatar}) => {
+
   const events = useSelector(state => state.tracker.events)
-  const dispatch = useDispatch()
   console.log(events)
+
+  const showAvatar = useMemo(() => isAuth && avatar && !avatar.isExpired, [isAuth, avatar])
+
   return (
     <>
-      {isAuth && avatar && !avatar.isExpired && <Avatar avatar={avatar}/>}
-      {isAuth ? <>
-        <div>Greeting! {`${user.firstName} ${user.lastName}`}</div>
-        <div>Welcome to our site!</div>
-      </> : null
-      }
-      <nav>
-        <button
-          onClick={() => {
-            navigate('/my-page')
-            dispatch(addEvent({type: "Click", name: "To my page"}))
-          }}>
-          My page
-        </button>
-        <button onClick={() => {
-          navigate('/settings')
-          dispatch(addEvent({type: "Click", name: "To settings"}))
-        }}>
-          Settings
-        </button>
-        <button onClick={() => {
-          navigate('/sign-out')
-          dispatch(addEvent({type: "Click", name: "To exit"}))
-        }}>
-          Exit
-        </button>
-      </nav>
+      {showAvatar && <Avatar avatar={avatar}/>}
+      {isAuth && <Greetings firstName={user.firstName} lastName={user.lastName} />}
+      <Navigate />
     </>
   )
 }
-export default HelloCom
+export default HelloFacade
+
+
+
+const Navigate = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const onClickHandler = (url, event) => {
+    return () => {
+      navigate(url)
+      dispatch(addEvent(event))
+    }
+  }
+
+  return (
+      <nav>
+        <button
+            onClick={onClickHandler("/my-page", {type: "Click",  name: "To my page"})}>
+          My page
+        </button>
+        <button onClick={onClickHandler("/my-settings", {type: "Click",  name: "To my settings"})}>
+          Settings
+        </button>
+        <button onClick={onClickHandler("/exit", {type: "Click",  name: "Sign out"})}>
+          Exit
+        </button>
+      </nav>
+  )
+}
+
+const Greetings = ({firstName, lastName}) => {
+
+  return (
+      <>
+        <div>Greeting! {`${firstName} ${lastName}`}</div>
+        <div>Welcome to our site!</div>
+      </>
+  )
+}
