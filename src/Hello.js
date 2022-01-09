@@ -1,4 +1,4 @@
-import React, {useMemo} from "react"
+import React, {useMemo, memo} from "react"
 import {useNavigate} from "react-router-dom"
 import { useSelector, useDispatch } from 'react-redux'
 import { addEvent } from './features/tracker/trackerSlice'
@@ -7,10 +7,6 @@ const Avatar = ({avatar}) => <img style={{width: "50px", height: "50px"}} alt={a
 
 
 const HelloFacade = ({user, isAuth, avatar}) => {
-
-  const events = useSelector(state => state.tracker.events)
-  console.log(events)
-
   const showAvatar = useMemo(() => isAuth && avatar && !avatar.isExpired, [isAuth, avatar])
 
   return (
@@ -24,10 +20,10 @@ const HelloFacade = ({user, isAuth, avatar}) => {
 export default HelloFacade
 
 
-
-const Navigate = () => {
+const Navigate = memo(() => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const events = () => useSelector(state => state.tracker.events)
 
   const onClickHandler = (url, event) => {
     return () => {
@@ -50,7 +46,7 @@ const Navigate = () => {
         </button>
       </nav>
   )
-}
+})
 
 const Greetings = ({firstName, lastName}) => {
 

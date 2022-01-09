@@ -1,0 +1,14 @@
+{
+  "outDir": "dist",
+  "baseUrl": ".",
+  "compilerOptions": {
+    "target": "es6",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

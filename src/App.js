@@ -1,22 +1,22 @@
 import './App.css'
-import React from "react"
-import HelloFacade from './Hello'
-
-const mockHello = (() => ({
-  avatar: {
-    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amateur-made_Na%27vi.jpg/1200px-Amateur-made_Na%27vi.jpg",
-    alt: "avatar avatar",
-    isExpired: false
-  },
-  user: {firstName: "Mike", lastName: "Jonson"},
-  isAuth: true
-}))()
+import React, {useState} from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { addEvent, eventSelector, firstEventSelector } from './features/tracker/trackerSlice'
 
 function App() {
+  const eventList = useSelector(eventSelector)
+  const event = useSelector(firstEventSelector)
+  const dispatch = useDispatch()
+  const [eventName, setEventName] = useState('')
+  console.log(event)
   return (
     <div className="App">
       <header className="App-header">
-        <HelloFacade {...mockHello}/>
+        <input type="text" placeholder="event name" onChange={e => setEventName(e.target.value)}/>
+        <button onClick={() => dispatch(addEvent({name: eventName}))}>add</button>
+        {eventList.map(event => {
+          return <div>{event.name}</div>
+        })}
       </header>
     </div>
   )
